@@ -6,6 +6,7 @@
     "name": "Granville Schmidt",
     "email": "granville.schmidt@gmail.com"
   },
+  "main": "briteverify.js",
   "repository": "granvilleschmidt/briteverify",
   "license": "MIT",
   "files": [

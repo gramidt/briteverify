@@ -6,20 +6,11 @@ module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
 
   grunt.initConfig({
-    jshint: {
+    eslint: {
       options: {
-        jshintrc: '.jshintrc',
-        reporter: require('jshint-stylish')
+        configFile: '.eslintrc'
       },
-      gruntfile: {
-        src: ['Gruntfile.js']
-      },
-      js: {
-        src: ['*.js']
-      },
-      test: {
-        src: ['test/**/*.js']
-      }
+      target: ['*.js']
     },
     mochacli: {
       options: {
@@ -27,22 +18,8 @@ module.exports = function (grunt) {
         bail: true
       },
       all: ['test/*.js']
-    },
-    watch: {
-      gruntfile: {
-        files: '<%= jshint.gruntfile.src %>',
-        tasks: ['jshint:gruntfile']
-      },
-      js: {
-        files: '<%= jshint.js.src %>',
-        tasks: ['jshint:js', 'mochacli']
-      },
-      test: {
-        files: '<%= jshint.test.src %>',
-        tasks: ['jshint:test', 'mochacli']
-      }
     }
   });
 
-  grunt.registerTask('default', ['jshint', 'mochacli']);
+  grunt.registerTask('default', ['eslint', 'mochacli']);
 };

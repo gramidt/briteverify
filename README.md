@@ -18,7 +18,7 @@ var briteverify = require('briteverify')(apiKey);
 let emailAddress = 'james@yahoo.com';
 
 briteverify
-  .verifyEmail(invalidEmail)
+  .verifyEmail(emailAddress)
   .then(function (response) {
     console.log(response);
   })

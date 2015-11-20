@@ -3,45 +3,52 @@
 var _ = require('underscore');
 var request = require('request');
 
-module.exports = function (apiKey) {
+const DEFAULT_TIMEOUT_IN_MILLISECONDS = 10000;
 
-  if (!apiKey) {
-    throw new Error('briteverify missing "apiKey" parameter');
+class BriteVerifyApi {
+
+  constructor (apiKey) {
+    if (!apiKey) {
+      throw new Error('briteverify missing "apiKey" parameter');
+    }
+
+    this.apiKey = apiKey;
   }
 
-  function _request (method, path, query, done) {
-    var data = {
-      apikey: apiKey
-    };
+  verifyEmail (email) {
+    let query = { address: email };
+
+    return this._get('/emails.json', query);
+  }
+
+  _request (method, path, query) {
+    let data = { apikey: this.apiKey };
     data = _(data).extend(query);
 
+    const BASE_API_PATH = 'https://bpi.briteverify.com';
+
     var opts = {
-      url: 'https://bpi.briteverify.com' + path,
+      url: BASE_API_PATH + path,
       method: method,
       qs: data,
-      timeout: 10000 // 10 seconds
+      timeout: DEFAULT_TIMEOUT_IN_MILLISECONDS
     };
 
-    request(opts, function (error, res, body) {
-      if (error) {
-        done(error);
-      } else {
-        done(null, JSON.parse(body), res);
-      }
+    return new Promise (function (resolve, reject) {
+
+      request(opts, function (err, res, serializedBody) {
+        if (err) reject(err);
+
+        let body = JSON.parse(serializedBody);
+
+        resolve(body);
+      });
     });
   }
 
-  function _get(path, query, done) {
-    _request('GET', path, query, done);
+  _get (path, query) {
+    return this._request('GET', path, query);
   }
+}
 
-  return {
-
-    email: {
-
-      verify: function (query, callback) {
-        _get('/emails.json', query, callback);
-      }
-    }
-  };
-};
+module.exports = (apiKey) => new BriteVerifyApi(apiKey);

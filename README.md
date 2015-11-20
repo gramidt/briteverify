@@ -15,19 +15,17 @@ $ npm install --save briteverify
 ```js
 var briteverify = require('briteverify')(apiKey);
 
-var query = {
-  address: 'james@yahoo.com'
-};
+let emailAddress = 'james@yahoo.com';
 
-briteverify.email.verify(query, function (err, data) {
-  if (err) {
-    console.log('error:')
+briteverify
+  .verifyEmail(invalidEmail)
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (err) {
     console.log(err);
-  } else {
-    console.log(data);
-  }
-  done();
-});
+  });
+
 ```
 
 
